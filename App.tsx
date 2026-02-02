@@ -10,8 +10,14 @@ const SUGGESTIONS = [
   "O que é o projeto SERH?"
 ];
 
-const App: React.FC = () => {
+interface AppProps {
+  widgetWidth?: string;
+  widgetHeight?: string;
+}
+
+const App: React.FC<AppProps> = ({ widgetWidth = '480px', widgetHeight = '700px' }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -29,6 +35,23 @@ const App: React.FC = () => {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isLoading]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', update);
+      return () => mediaQuery.removeEventListener('change', update);
+    }
+
+    // Fallback para navegadores antigos
+    // @ts-ignore
+    mediaQuery.addListener(update);
+    // @ts-ignore
+    return () => mediaQuery.removeListener(update);
+  }, []);
 
   const handleSendMessage = useCallback(async (text?: string) => {
     const messageToSend = text || inputValue;
@@ -98,7 +121,10 @@ const App: React.FC = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-[95vw] h-[90vh] md:w-[420px] md:h-[650px] flex flex-col bg-white shadow-2xl rounded-2xl border border-slate-200 overflow-hidden z-50 animate-slide-up">
+        <div
+          className="fixed bottom-6 right-6 w-[95vw] h-[90vh] flex flex-col bg-white shadow-2xl rounded-2xl border border-slate-200 overflow-hidden z-50 animate-slide-up"
+          style={isMobile ? undefined : { width: widgetWidth, height: widgetHeight }}
+        >
           {/* Top Bar */}
           <header className="bg-slate-800 text-white px-6 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-3 flex-1">

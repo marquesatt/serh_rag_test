@@ -30,10 +30,13 @@ if (!container) {
   document.body.appendChild(container);
 }
 
+const widgetWidth = container.getAttribute('data-width') || '480px';
+const widgetHeight = container.getAttribute('data-height') || '700px';
+
 const root = ReactDOM.createRoot(container);
 root.render(
   <React.StrictMode>
-    <App />
+    <App widgetWidth={widgetWidth} widgetHeight={widgetHeight} />
   </React.StrictMode>
 );
 
