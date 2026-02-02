@@ -1,5 +1,4 @@
 import { GoogleGenAI } from "@google/genai";
-import { VercelRequest, VercelResponse } from "@vercel/node";
 
 const KNOWLEDGE_BASE = `
 # Regras SERH (Fonte da Verdade)
@@ -65,17 +64,11 @@ INSTRUÇÕES DE COMPORTAMENTO:
 BASE DE CONHECIMENTO:
 ${KNOWLEDGE_BASE}`;
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-): Promise<void> {
-  res.setHeader("Access-Control-Allow-Credentials", "true");
+export default async function handler(req: any, res: any): Promise<void> {
+  // CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-  );
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") {
     res.status(200).end();
@@ -87,22 +80,23 @@ export default async function handler(
     return;
   }
 
-  const { message, history } = req.body;
-
-  if (!message) {
-    res.status(400).json({ error: "Message is required" });
-    return;
-  }
-
   try {
+    const { message, history } = req.body;
+
+    if (!message) {
+      res.status(400).json({ error: "Message is required" });
+      return;
+    }
+
     const apiKey = process.env.VITE_API_KEY;
     
     if (!apiKey) {
       console.error("VITE_API_KEY não configurada");
-      res.status(500).json({ error: "API key não configurada" });
+      res.status(500).json({ error: "API key não configurada", code: "NO_API_KEY" });
       return;
     }
 
+    console.log("Iniciando chat com Gemini...");
     const ai = new GoogleGenAI({ apiKey });
     const chat = ai.chats.create({
       model: "gemini-3-flash-preview",
@@ -113,15 +107,23 @@ export default async function handler(
       history: history || [],
     });
 
+    console.log("Enviando mensagem...");
     const response = await chat.sendMessage({ message });
     const text = response.text || "";
 
+    console.log("Resposta obtida com sucesso");
     res.status(200).json({ text });
   } catch (error: any) {
-    console.error("Erro na API Gemini:", error);
+    console.error("Erro na API:", {
+      message: error?.message,
+      code: error?.code,
+      status: error?.status,
+      stack: error?.stack,
+    });
     res.status(500).json({
       error: "Erro ao processar requisição",
       details: error?.message || String(error),
+      code: error?.code,
     });
   }
 }
