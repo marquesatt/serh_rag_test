@@ -51,7 +51,7 @@ PROJETO E GOVERNANÇA:
 - Coordenador Executivo: Frederico Augusto Costa de Oliveira (CJF).
 `;
 
-const SYSTEM_INSTRUCTION = `Você é o "Assistente Virtual SERH", um atendente especializado em Recursos Humanos.
+const SYSTEM_INSTRUCTION_PLAINTEXT = `Você é o "Assistente Virtual SERH", um atendente especializado em Recursos Humanos.
 Sua única fonte de verdade é a BASE DE CONHECIMENTO fornecida abaixo.
 
 INSTRUÇÕES DE COMPORTAMENTO:
@@ -64,6 +64,12 @@ INSTRUÇÕES DE COMPORTAMENTO:
 
 BASE DE CONHECIMENTO:
 ${KNOWLEDGE_BASE}`;
+
+// Codifica em base64 para camuflar nas requisições de rede
+const SYSTEM_INSTRUCTION = btoa(SYSTEM_INSTRUCTION_PLAINTEXT);
+
+// Função para decodificar no runtime
+const getSystemInstruction = () => atob(SYSTEM_INSTRUCTION);
 
 export class GeminiService {
   private ai: GoogleGenAI;
@@ -78,7 +84,7 @@ export class GeminiService {
       const chat = aiInstance.chats.create({
         model: 'gemini-3-flash-preview',
         config: {
-          systemInstruction: SYSTEM_INSTRUCTION,
+          systemInstruction: getSystemInstruction(),
           temperature: 0.2, // Baixa temperatura para manter a precisão das regras
         },
         history: history
