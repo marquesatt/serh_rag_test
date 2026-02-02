@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo - Widget SERH no PHP</title>
+    
+    <!-- Font Awesome (necessário para os ícones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Estilo da página de exemplo - não é necessário para o widget funcionar */
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Página PHP de Exemplo</h1>
+        <p>Este é um exemplo de como o widget SERH funciona quando integrado em uma página PHP.</p>
+        
+        <div class="card">
+            <h2>📦 Como usar no seu site PHP:</h2>
+            <p>Adicione estas linhas no seu arquivo PHP (antes do <code>&lt;/body&gt;</code>):</p>
+            <pre><code>&lt;!-- Font Awesome para os ícones --&gt;
+&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"&gt;
+
+&lt;!-- Widget SERH --&gt;
+&lt;link rel="stylesheet" href="https://seu-dominio.com/dist/serh-widget.css"&gt;
+&lt;script type="module" src="https://seu-dominio.com/dist/serh-widget.js"&gt;&lt;/script&gt;</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>💡 Recursos do Widget:</h2>
+            <ul>
+                <li>✅ Botão flutuante no canto inferior direito</li>
+                <li>✅ Abre/fecha com animação suave</li>
+                <li>✅ Responsivo (mobile e desktop)</li>
+                <li>✅ Não interfere no layout da página</li>
+                <li>✅ Chat com IA integrado</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>🎨 Controle via JavaScript (opcional):</h2>
+            <pre><code>// Mostrar widget programaticamente
+window.SERHChat.show();
+
+// Esconder widget programaticamente
+window.SERHChat.hide();</code></pre>
+        </div>
+
+        <p style="margin-top: 3rem; text-align: center;">
+            👉 <strong>Clique no botão azul no canto inferior direito para testar o chat!</strong>
+        </p>
+    </div>
+
+    <!-- ========================================
+         WIDGET SERH - INÍCIO
+         Copie estas linhas para o seu PHP
+         ======================================== -->
+    
+    <!-- CSS do Widget -->
+    <link rel="stylesheet" href="/assets/index.css">
+    
+    <!-- JS do Widget (após build, será serh-widget.js) -->
+    <script type="module" src="/src/index.tsx"></script>
+    
+    <!-- WIDGET SERH - FIM -->
+
+</body>
+</html>
