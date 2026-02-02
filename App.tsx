@@ -128,9 +128,7 @@ const App: React.FC<AppProps> = ({ widgetWidth = '480px', widgetHeight = '700px'
           {/* Top Bar */}
           <header className="bg-slate-800 text-white px-6 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-3 flex-1">
-              <div className="bg-blue-500 p-2 rounded-lg">
-                <i className="fas fa-landmark text-lg"></i>
-              </div>
+              <img src="/SERH.png" alt="SERH" className="w-10 h-8" />
               <div>
                 <h1 className="font-bold text-base tracking-tight">Suporte SERH</h1>
                 <p className="text-[9px] text-blue-300 font-bold uppercase tracking-widest">Assistente Virtual</p>
