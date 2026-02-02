@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { marked } from 'marked';
 import { Message } from '../types';
 
 interface ChatMessageProps {
@@ -9,10 +10,9 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const isUser = message.role === 'user';
 
-  // Usa a biblioteca marked injetada no index.html para renderizar Markdown
+  // Renderiza Markdown com marked (bundle)
   const renderContent = (content: string) => {
-    // @ts-ignore - marked vem do CDN no index.html
-    return { __html: window.marked.parse(content) };
+    return { __html: marked.parse(content) as string };
   };
 
   return (
