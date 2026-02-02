@@ -1,4 +1,5 @@
-const { GoogleGenAI } = require("@google/genai");
+import { GoogleGenAI } from "@google/genai";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 const KNOWLEDGE_BASE = `
 # Regras SERH (Fonte da Verdade)
@@ -64,7 +65,10 @@ INSTRUÇÕES DE COMPORTAMENTO:
 BASE DE CONHECIMENTO:
 ${KNOWLEDGE_BASE}`;
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
@@ -72,24 +76,34 @@ export default async function handler(req, res) {
     "Access-Control-Allow-Headers",
     "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
   );
-  
+
   if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
 
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    res.status(405).json({ error: "Method not allowed" });
+    return;
   }
 
   const { message, history } = req.body;
 
   if (!message) {
-    return res.status(400).json({ error: "Message is required" });
+    res.status(400).json({ error: "Message is required" });
+    return;
   }
 
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.VITE_API_KEY });
+    const apiKey = process.env.VITE_API_KEY;
+    
+    if (!apiKey) {
+      console.error("VITE_API_KEY não configurada");
+      res.status(500).json({ error: "API key não configurada" });
+      return;
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
     const chat = ai.chats.create({
       model: "gemini-3-flash-preview",
       config: {
@@ -102,11 +116,12 @@ export default async function handler(req, res) {
     const response = await chat.sendMessage({ message });
     const text = response.text || "";
 
-    return res.status(200).json({ text });
-  } catch (error) {
+    res.status(200).json({ text });
+  } catch (error: any) {
     console.error("Erro na API Gemini:", error);
-    return res
-      .status(500)
-      .json({ error: "Erro ao processar requisição", details: error.message });
+    res.status(500).json({
+      error: "Erro ao processar requisição",
+      details: error?.message || String(error),
+    });
   }
 }
