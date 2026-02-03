@@ -26,7 +26,7 @@ interface VectorIndexFile {
 let vectorIndex: VectorIndexFile | null = null;
 
 /**
- * Carrega índice vetorial do arquivo público
+ * Carrega índice vetorial do endpoint
  */
 export async function loadVectorIndex(): Promise<VectorIndexFile> {
   if (vectorIndex) {
@@ -34,7 +34,12 @@ export async function loadVectorIndex(): Promise<VectorIndexFile> {
   }
 
   try {
-    const response = await fetch('/vectorIndex.json');
+    // Usa a URL de produção ou fallback para relativo
+    const vectorIndexUrl = 'https://serh-rag-test.vercel.app/vectorIndex.json';
+    
+    console.log(`📚 Carregando índice de: ${vectorIndexUrl}`);
+    
+    const response = await fetch(vectorIndexUrl);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
@@ -44,7 +49,7 @@ export async function loadVectorIndex(): Promise<VectorIndexFile> {
     return vectorIndex;
   } catch (error) {
     console.error('Erro ao carregar índice:', error);
-    throw new Error('Não foi possível carregar o índice vetorial. Certifique-se de executar: npm run build:vector-index');
+    throw new Error('Não foi possível carregar o índice vetorial.');
   }
 }
 
