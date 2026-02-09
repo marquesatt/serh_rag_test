@@ -79,12 +79,12 @@ function cosineSimilarity(a: number[], b: number[]): number {
 async function generateQueryEmbedding(query: string, apiKey: string): Promise<number[]> {
   try {
     const response = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent?key=' + apiKey,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=' + apiKey,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'models/embedding-001',
+          model: 'models/gemini-embedding-001',
           content: {
             parts: [{ text: query.substring(0, 3000) }],
           },

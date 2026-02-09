@@ -323,7 +323,7 @@ export const generateEmbedding = async (text: string, apiKey: string): Promise<n
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'models/embedding-001',
+        model: 'models/embedding-005',
         content: {
           parts: [{ text: text.substring(0, 2000) }], // Limita tamanho
         },
